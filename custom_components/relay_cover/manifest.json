@@ -1,0 +1,12 @@
+{
+  "domain": "relay_cover",
+  "name": "Relay cover",
+  "categories": ["helpers", "blinds_curtains"],
+  "codeowners": ["@ignaciogallegossanchez"],
+  "config_flow": true,
+  "documentation": "https://github.com/ignaciogallegossanchez/relay-cover",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/ignaciogallegossanchez/relay-cover/issues",
+  "version": "0.1.0"
+}

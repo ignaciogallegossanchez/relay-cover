@@ -1,0 +1,8 @@
+{
+  "domain": "fake_relay",
+  "name": "Fake relay (tests only)",
+  "codeowners": [],
+  "documentation": "https://example.invalid/fake_relay",
+  "iot_class": "local_push",
+  "version": "0.0.1"
+}

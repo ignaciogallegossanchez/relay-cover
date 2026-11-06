@@ -1,0 +1,84 @@
+{
+  "title": "Persiana con relés",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Crear una persiana con relés",
+        "description": "Crea una persiana que se mueve con dos relés: uno para subirla y otro para bajarla. Cada relé mantiene el motor en marcha mientras está encendido.",
+        "data": {
+          "name": "Nombre",
+          "open_relay": "Relé de subida",
+          "close_relay": "Relé de bajada",
+          "opening_time": "Tiempo de subida",
+          "closing_time": "Tiempo de bajada",
+          "interlock": "Bloqueo mutuo por software",
+          "end_margin": "Holgura en los límites",
+          "hide_relays": "Ocultar los relés"
+        },
+        "data_description": {
+          "name": "El nombre de la persiana nueva.",
+          "open_relay": "El interruptor que sube la persiana mientras está encendido.",
+          "close_relay": "El interruptor que baja la persiana mientras está encendido.",
+          "opening_time": "Segundos que tarda la persiana en ir de cerrada del todo a abierta del todo.",
+          "closing_time": "Segundos que tarda la persiana en ir de abierta del todo a cerrada del todo.",
+          "interlock": "No encender nunca los dos relés a la vez y esperar medio segundo antes de cambiar de sentido. Desactívalo solo si los relés ya protegen el motor.",
+          "end_margin": "Al abrir o cerrar del todo, dejar el relé encendido este porcentaje del tiempo de recorrido completo de más, para que la persiana llegue de verdad al tope. 0 lo desactiva; 100 hace siempre el recorrido completo.",
+          "hide_relays": "Ocultar los dos interruptores, para usar la persiana en su lugar."
+        }
+      }
+    },
+    "error": {
+      "same_relay": "El relé de subida y el de bajada tienen que ser distintos.",
+      "relay_in_use": "Uno de los relés ya lo usa otra persiana con relés.",
+      "invalid_travel_time": "Los tiempos de subida y de bajada tienen que ser mayores que cero."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de la persiana con relés",
+        "description": "Cambia los relés, los tiempos de recorrido y cómo protege la persiana el motor.",
+        "data": {
+          "open_relay": "Relé de subida",
+          "close_relay": "Relé de bajada",
+          "opening_time": "Tiempo de subida",
+          "closing_time": "Tiempo de bajada",
+          "interlock": "Bloqueo mutuo por software",
+          "end_margin": "Holgura en los límites",
+          "hide_relays": "Ocultar los relés"
+        },
+        "data_description": {
+          "open_relay": "El interruptor que sube la persiana mientras está encendido.",
+          "close_relay": "El interruptor que baja la persiana mientras está encendido.",
+          "opening_time": "Segundos que tarda la persiana en ir de cerrada del todo a abierta del todo.",
+          "closing_time": "Segundos que tarda la persiana en ir de abierta del todo a cerrada del todo.",
+          "interlock": "No encender nunca los dos relés a la vez y esperar medio segundo antes de cambiar de sentido. Desactívalo solo si los relés ya protegen el motor.",
+          "end_margin": "Al abrir o cerrar del todo, dejar el relé encendido este porcentaje del tiempo de recorrido completo de más, para que la persiana llegue de verdad al tope. 0 lo desactiva; 100 hace siempre el recorrido completo.",
+          "hide_relays": "Ocultar los dos interruptores, para usar la persiana en su lugar."
+        }
+      }
+    },
+    "error": {
+      "same_relay": "El relé de subida y el de bajada tienen que ser distintos.",
+      "relay_in_use": "Uno de los relés ya lo usa otra persiana con relés.",
+      "invalid_travel_time": "Los tiempos de subida y de bajada tienen que ser mayores que cero."
+    }
+  },
+  "exceptions": {
+    "position_unknown": {
+      "message": "No se conoce la posición de la persiana. Ábrela o ciérrala del todo primero."
+    },
+    "relay_unavailable": {
+      "message": "No está disponible un relé que necesita este movimiento. La persiana se puede seguir parando."
+    },
+    "relay_timeout": {
+      "message": "El relé {relay} no ha respondido a tiempo."
+    }
+  },
+  "issues": {
+    "relay_removed": {
+      "title": "Se ha borrado un relé de {cover}",
+      "description": "El relé {relay} de la persiana {cover} ya no existe, así que la persiana no puede moverse como debe.\n\nPara arreglarlo, ve a **Ajustes** > **Dispositivos y servicios** > **Ayudantes**, selecciona **{cover}** y elige **Configurar**. Elige otro relé y guarda: la persiana se recarga con él y este aviso desaparece.\n\nSi el relé {relay} se vuelve a añadir, este aviso desaparece solo."
+    }
+  }
+}

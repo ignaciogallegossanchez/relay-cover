@@ -1,0 +1,84 @@
+{
+  "title": "Relay cover",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Create a relay cover",
+        "description": "Create a shutter that is moved by two relays: one to open it and one to close it. Each relay keeps the motor running while it is on.",
+        "data": {
+          "name": "Name",
+          "open_relay": "Open relay",
+          "close_relay": "Close relay",
+          "opening_time": "Opening time",
+          "closing_time": "Closing time",
+          "interlock": "Software interlock",
+          "end_margin": "Extra time at the ends",
+          "hide_relays": "Hide relays"
+        },
+        "data_description": {
+          "name": "The name of the new shutter.",
+          "open_relay": "The switch that moves the shutter up while it is on.",
+          "close_relay": "The switch that moves the shutter down while it is on.",
+          "opening_time": "Seconds the shutter needs to go from fully closed to fully open.",
+          "closing_time": "Seconds the shutter needs to go from fully open to fully closed.",
+          "interlock": "Never turn both relays on at the same time, and pause half a second before changing direction. Turn it off only if the relays already protect the motor.",
+          "end_margin": "When opening or closing fully, keep the relay on this percent of the full travel time longer, so that the shutter really reaches the end. 0 turns it off; 100 always runs a full travel.",
+          "hide_relays": "Hide the two switches, so the shutter is used instead of them."
+        }
+      }
+    },
+    "error": {
+      "same_relay": "The open relay and the close relay must be different.",
+      "relay_in_use": "One of the relays is already used by another relay cover.",
+      "invalid_travel_time": "The opening and closing times must be greater than zero."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Relay cover options",
+        "description": "Change the relays, the travel times and how the shutter protects the motor.",
+        "data": {
+          "open_relay": "Open relay",
+          "close_relay": "Close relay",
+          "opening_time": "Opening time",
+          "closing_time": "Closing time",
+          "interlock": "Software interlock",
+          "end_margin": "Extra time at the ends",
+          "hide_relays": "Hide relays"
+        },
+        "data_description": {
+          "open_relay": "The switch that moves the shutter up while it is on.",
+          "close_relay": "The switch that moves the shutter down while it is on.",
+          "opening_time": "Seconds the shutter needs to go from fully closed to fully open.",
+          "closing_time": "Seconds the shutter needs to go from fully open to fully closed.",
+          "interlock": "Never turn both relays on at the same time, and pause half a second before changing direction. Turn it off only if the relays already protect the motor.",
+          "end_margin": "When opening or closing fully, keep the relay on this percent of the full travel time longer, so that the shutter really reaches the end. 0 turns it off; 100 always runs a full travel.",
+          "hide_relays": "Hide the two switches, so the shutter is used instead of them."
+        }
+      }
+    },
+    "error": {
+      "same_relay": "The open relay and the close relay must be different.",
+      "relay_in_use": "One of the relays is already used by another relay cover.",
+      "invalid_travel_time": "The opening and closing times must be greater than zero."
+    }
+  },
+  "exceptions": {
+    "position_unknown": {
+      "message": "The position of the shutter is unknown. Open or close it fully first."
+    },
+    "relay_unavailable": {
+      "message": "A relay this movement needs is unavailable. The shutter can still be stopped."
+    },
+    "relay_timeout": {
+      "message": "The relay {relay} did not answer in time."
+    }
+  },
+  "issues": {
+    "relay_removed": {
+      "title": "A relay of {cover} was removed",
+      "description": "The relay {relay} of the shutter {cover} no longer exists, so the shutter cannot move as it should.\n\nTo fix it, go to **Settings** > **Devices & services** > **Helpers**, select **{cover}** and choose **Configure**. Choose another relay and save: the shutter reloads with it and this issue goes away.\n\nIf the relay {relay} is added back, this issue goes away on its own."
+    }
+  }
+}
