@@ -91,10 +91,11 @@ async def test_set_position(hass: HomeAssistant, freezer) -> None:
     assert cover_state(hass) == (CoverState.OPEN, 30)
 
 
+@pytest.mark.parametrize("end_margin", [0, 20])
 @pytest.mark.parametrize("saved_position", [100])
 @pytest.mark.usefixtures("cover")
 async def test_open_when_open_sends_nothing(hass: HomeAssistant, freezer) -> None:
-    """Without margin there is nothing to run at the end: no relay pulse."""
+    """Already standing at the end, with or without margin: no relay pulse."""
     events = async_capture_events(hass, EVENT_STATE_CHANGED)
     await call(hass, SERVICE_OPEN_COVER)
     await tick(hass, freezer, 3)
@@ -988,21 +989,6 @@ async def test_an_off_that_always_fails_is_logged_once(
     assert [r.levelname for r in caplog.records if "could not" in r.message] == [
         "ERROR"
     ]
-
-
-@pytest.mark.parametrize("end_margin", [20])
-@pytest.mark.parametrize("saved_position", [100])
-@pytest.mark.usefixtures("cover")
-async def test_open_when_open_runs_the_margin(hass: HomeAssistant, freezer) -> None:
-    """20 %: open at 100 keeps up on 4 s (20 % of 20 s), shown opening at 100."""
-    await call(hass, SERVICE_OPEN_COVER)
-    assert cover_state(hass) == (CoverState.OPENING, 100)
-    assert relay_states(hass) == (STATE_ON, STATE_OFF)
-    await tick(hass, freezer, 4 - STEP)
-    assert relay_states(hass) == (STATE_ON, STATE_OFF)
-    await tick(hass, freezer, STEP)
-    assert relay_states(hass) == (STATE_OFF, STATE_OFF)
-    assert cover_state(hass) == (CoverState.OPEN, 100)
 
 
 def _saved_position(hass_storage: dict[str, Any]) -> float | None:

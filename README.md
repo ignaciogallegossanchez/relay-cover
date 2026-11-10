@@ -80,28 +80,33 @@ two relays must be different, and a relay can only belong to one relay cover.
 ### Extra time at the ends
 
 An order to an end (open, close, or a position of 0 or 100) keeps the relay on for the time
-to that end plus the extra time, a percent of the full travel time of that direction, and
-never longer than a full travel. The position never leaves 0-100.
+to that end plus the extra time, a percent of the full travel time of that direction. The
+position never leaves 0-100.
 
 Example with opening 10 s, closing 20 s and 20 %:
 
 - from 90 %, open runs 1 + 2 = 3 s;
-- from 90 %, close runs 18 + 4 = 22 s, so 20 s (a full travel);
-- already at 0 %, close runs 0 + 4 = 4 s;
+- from 90 %, close runs 18 + 4 = 22 s;
+- from 0 %, open runs 10 + 2 = 12 s;
+- standing at 0 %, close does nothing;
 - going to 50 % has no extra time.
 
-From the opposite end there is no extra time: from 0 %, open runs 10 s, a full travel. If
-the measured opening time is too short, a full opening from closed stops short of the top.
+A full travel gets the extra time too, also from an unknown position: a motor that starts
+late or runs a little slower than measured still reaches the end.
+
+An order to the end the shutter stands still at does nothing: it is believed there already,
+and the extra time of the travel that took it there made sure of it. While it is moving away
+from that end, the order takes it back, with the extra time.
 
 With 0 % the relay goes off when the estimated position reaches the end, and an order to
-the end the shutter is believed at does not move it: it stops the shutter if it is moving
-away from that end, and changes nothing otherwise. With 100 % every order to an end runs a
-full travel. Asking for a position in the middle the shutter is already at stops
-it if it is moving, and does nothing otherwise.
+the end the shutter is shown at stops it if it is moving away from that end. With 100 % an
+order to an end runs a full travel more than the time to that end. Asking for a position in
+the middle the shutter is already at stops it if it is moving, and does nothing otherwise.
 
 The full travel counts from when the motor started, also when a wall button started it.
-With extra time, if a wall button has held a relay on for more than a full travel, an
-order from Home Assistant to the end of that direction switches the relay off at once.
+With extra time, if a wall button has held a relay on for more than a full travel plus the
+extra time, an order from Home Assistant to the end of that direction switches the relay off
+at once.
 
 The estimate drifts a little with each movement. The extra time corrects it each time the
 shutter opens or closes fully; with 0 % it is never corrected that way.

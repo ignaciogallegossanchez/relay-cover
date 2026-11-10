@@ -22,7 +22,7 @@
           "opening_time": "Segundos que tarda la persiana en ir de cerrada del todo a abierta del todo.",
           "closing_time": "Segundos que tarda la persiana en ir de abierta del todo a cerrada del todo.",
           "interlock": "No encender nunca los dos relés a la vez y esperar medio segundo antes de cambiar de sentido. Desactívalo solo si los relés ya protegen el motor.",
-          "end_margin": "Al abrir o cerrar del todo, dejar el relé encendido este porcentaje del tiempo de recorrido completo de más, para que la persiana llegue de verdad al tope. 0 lo desactiva; 100 hace siempre el recorrido completo.",
+          "end_margin": "Al abrir o cerrar del todo, dejar el relé encendido este porcentaje del tiempo de recorrido completo de más, para que la persiana llegue de verdad al tope. También tras un recorrido completo. 0 lo desactiva.",
           "hide_relays": "Ocultar los dos interruptores, para usar la persiana en su lugar."
         }
       }
@@ -53,7 +53,7 @@
           "opening_time": "Segundos que tarda la persiana en ir de cerrada del todo a abierta del todo.",
           "closing_time": "Segundos que tarda la persiana en ir de abierta del todo a cerrada del todo.",
           "interlock": "No encender nunca los dos relés a la vez y esperar medio segundo antes de cambiar de sentido. Desactívalo solo si los relés ya protegen el motor.",
-          "end_margin": "Al abrir o cerrar del todo, dejar el relé encendido este porcentaje del tiempo de recorrido completo de más, para que la persiana llegue de verdad al tope. 0 lo desactiva; 100 hace siempre el recorrido completo.",
+          "end_margin": "Al abrir o cerrar del todo, dejar el relé encendido este porcentaje del tiempo de recorrido completo de más, para que la persiana llegue de verdad al tope. También tras un recorrido completo. 0 lo desactiva.",
           "hide_relays": "Ocultar los dos interruptores, para usar la persiana en su lugar."
         }
       }

@@ -213,11 +213,14 @@ class MotionController:
     def request_move(self, target: float, now: float) -> None:
         """Ask the cover to go to a position; asking for the current one stops it.
 
-        An end is run to with the margin at the ends, also from that end. Without margin,
-        asking for the end the cover is at stops it, unless it is running to that end.
+        An end is run to with the margin at the ends. Asking for the end the cover stands
+        still at does nothing. Without margin, asking for the end the cover is at stops it,
+        unless it is running to that end.
         """
         self.advance(now)
         current = self.calc.position(now)
+        if current == target and self.shown_direction() is None:
+            return
         if target in (OPEN, CLOSED) and (
             self.end_margin > 0 or current is None or round(current) != target
         ):
@@ -324,15 +327,15 @@ class MotionController:
     def stop_at(self) -> float | None:
         """Return when the movement under way reaches the target of the order.
 
-        An end gets the margin at the ends on top, up to a full travel in that direction.
+        An end gets the margin at the ends on top, also after a full travel: the motor may
+        start late or run slower than measured.
         """
         move, started_at = self.goal, self.calc.changed_at
         if not isinstance(move, Move) or self.calc.direction is not move.direction:
             return None
         run = self.calc.time_to(move.target, move.direction, started_at)
         if move.target == move.direction.end:
-            full = self.calc.travel_time(move.direction)
-            run = min(run + self.end_margin * full, full)
+            run += self.end_margin * self.calc.travel_time(move.direction)
         return started_at + run
 
     def _reversal_give_up_at(self) -> float | None:

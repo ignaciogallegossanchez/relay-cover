@@ -3,7 +3,7 @@
 Times: opening 20 s (5 %/s), closing 30 s (3.33 %/s); D = DEAD_TIME (0.5 s); no margin at
 the ends unless a test sets one. Rules checked:
 - An order to an end runs the time to the end plus a margin, a percent of the full travel
-  of that direction, at most a full travel. A move to a middle position has no margin.
+  of that direction, also after a full travel. A move to a middle position has no margin.
 - The dead time is always 0.5 s from the last off, ordered or shown, also before the relay
   confirms. An on that may still be queued in the relay is not waited for.
 - Without interlock off and on go out back to back. With interlock a reversal waits at
@@ -197,13 +197,12 @@ def _margin_sim(position: float | None, end_margin: float = 0.2) -> Sim:
     ("position", "target", "off_at"),
     [
         pytest.param(90, 100, 3, id="open_from_90_1s_plus_2s"),
-        pytest.param(90, 0, 20, id="close_from_90_capped_at_a_full_travel"),
-        pytest.param(0, 0, 4, id="close_when_closed_runs_the_margin"),
+        pytest.param(90, 0, 22, id="close_from_90_18s_plus_4s"),
         pytest.param(90, 50, 8, id="middle_has_no_margin"),
     ],
 )
 def test_end_margin(position: float, target: int, off_at: float) -> None:
-    """Up 10 s, down 20 s, 20 %: 1 + 2 s; 18 + 4 s capped at 20 s; 0 + 4 s; none."""
+    """Up 10 s, down 20 s, 20 %: 1 + 2 s; 18 + 4 s; none."""
     sim = _margin_sim(position)
     sim.move(target)
     relay = OPEN if target > position or target == 100 else CLOSE
@@ -213,6 +212,71 @@ def test_end_margin(position: float, target: int, off_at: float) -> None:
     sim.tick(0.25)
     assert sim.log == [(0, relay, ON), (off_at, relay, OFF)]
     assert (sim.position, sim.shown) == (target, None)
+
+
+@pytest.mark.parametrize(
+    ("position", "target", "relay", "off_at"),
+    [
+        pytest.param(100, 0, CLOSE, 24, id="close_from_open_20s_plus_4s"),
+        pytest.param(0, 100, OPEN, 12, id="open_from_closed_10s_plus_2s"),
+        pytest.param(None, 0, CLOSE, 24, id="close_from_unknown_20s_plus_4s"),
+    ],
+)
+def test_end_margin_after_a_full_travel(
+    position: float | None, target: int, relay: Relay, off_at: float
+) -> None:
+    """A full travel also gets the margin: a motor slower than measured still gets there."""
+    sim = _margin_sim(position)
+    sim.move(target)
+    sim.tick(off_at - 0.25)
+    assert sim.log == [(0, relay, ON)]
+    assert (sim.position, sim.shown) == (target, relay.direction)
+    sim.tick(0.25)
+    assert sim.log == [(0, relay, ON), (off_at, relay, OFF)]
+    assert (sim.position, sim.shown) == (target, None)
+
+
+@pytest.mark.parametrize("end_margin", [0, 0.2, 1])
+@pytest.mark.parametrize("position", [0, 100])
+def test_order_to_the_end_it_stands_at_does_nothing(
+    position: float, end_margin: float
+) -> None:
+    """Standing at an end, an order to that end switches no relay."""
+    sim = _margin_sim(position, end_margin=end_margin)
+    sim.move(position)
+    sim.tick(30)
+    assert sim.log == []
+    assert (sim.position, sim.shown) == (position, None)
+
+
+def test_order_to_an_end_near_it_runs_the_margin() -> None:
+    """Stopped at 99.6 (shown 100): open runs 0.4 % of 10 s plus 2 s."""
+    sim = _margin_sim(100)
+    sim.close()
+    sim.tick(0.08)
+    sim.stop()
+    sim.tick(1)
+    assert sim.position == 100
+    start = sim.now
+    sim.open()
+    sim.tick(5)
+    assert sim.commands_since(start) == [
+        (start, OPEN, ON),
+        (pytest.approx(start + 0.04 + 2), OPEN, OFF),
+    ]
+    assert (sim.position, sim.shown) == (100, None)
+
+
+def test_order_back_to_the_end_it_leaves_runs_back() -> None:
+    """Closing from 100, open while still shown at 100: back up with the margin."""
+    sim = _margin_sim(100)
+    sim.close()
+    sim.tick(0.08)
+    start = sim.now
+    sim.open()
+    sim.tick(5)
+    assert sim.commands_since(start)[0] == (start, CLOSE, OFF)
+    assert (sim.position, sim.shown) == (100, None)
 
 
 def test_end_margin_shows_the_end_while_moving() -> None:
@@ -302,19 +366,19 @@ def test_without_end_margin_nothing_changes() -> None:
 @pytest.mark.parametrize(
     ("position", "target", "relay", "off_at"),
     [
-        pytest.param(90, 100, OPEN, 10, id="open_from_90"),
-        pytest.param(50, 0, CLOSE, 20, id="close_from_50"),
-        pytest.param(100, 100, OPEN, 10, id="open_when_open"),
-        pytest.param(None, 0, CLOSE, 20, id="close_from_unknown"),
+        pytest.param(90, 100, OPEN, 11, id="open_from_90"),
+        pytest.param(50, 0, CLOSE, 30, id="close_from_50"),
+        pytest.param(0, 100, OPEN, 20, id="open_from_closed"),
+        pytest.param(None, 0, CLOSE, 40, id="close_from_unknown"),
     ],
 )
-def test_full_end_margin_always_runs_a_full_travel(
+def test_full_end_margin_adds_a_full_travel(
     position: float | None, target: int, relay: Relay, off_at: float
 ) -> None:
-    """100 %: an order to an end always keeps the relay on a full travel."""
+    """100 %: an order to an end runs the time to the end plus a full travel."""
     sim = _margin_sim(position, end_margin=1)
     sim.move(target)
-    sim.tick(30)
+    sim.tick(50)
     assert sim.log == [(0, relay, ON), (off_at, relay, OFF)]
     assert sim.position == target
 

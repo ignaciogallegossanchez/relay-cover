@@ -22,7 +22,7 @@
           "opening_time": "Seconds the shutter needs to go from fully closed to fully open.",
           "closing_time": "Seconds the shutter needs to go from fully open to fully closed.",
           "interlock": "Never turn both relays on at the same time, and pause half a second before changing direction. Turn it off only if the relays already protect the motor.",
-          "end_margin": "When opening or closing fully, keep the relay on this percent of the full travel time longer, so that the shutter really reaches the end. 0 turns it off; 100 always runs a full travel.",
+          "end_margin": "When opening or closing fully, keep the relay on this percent of the full travel time longer, so that the shutter really reaches the end. Also after a full travel. 0 turns it off.",
           "hide_relays": "Hide the two switches, so the shutter is used instead of them."
         }
       }
@@ -53,7 +53,7 @@
           "opening_time": "Seconds the shutter needs to go from fully closed to fully open.",
           "closing_time": "Seconds the shutter needs to go from fully open to fully closed.",
           "interlock": "Never turn both relays on at the same time, and pause half a second before changing direction. Turn it off only if the relays already protect the motor.",
-          "end_margin": "When opening or closing fully, keep the relay on this percent of the full travel time longer, so that the shutter really reaches the end. 0 turns it off; 100 always runs a full travel.",
+          "end_margin": "When opening or closing fully, keep the relay on this percent of the full travel time longer, so that the shutter really reaches the end. Also after a full travel. 0 turns it off.",
           "hide_relays": "Hide the two switches, so the shutter is used instead of them."
         }
       }
